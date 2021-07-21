@@ -4,20 +4,15 @@ import argparse
 import sqlite3
 
 from discord.ext import commands
-from discord import File, Embed, Color
+from discord import File, Embed
 from db.champ import Champ
+from factions import get_faction_color
 
 TOKEN = os.getenv('TOKEN')
 TOKEN_TEST = os.getenv('TOKEN_TEST')
 
 DB_DIR = "db/tqs.db"
 CARDS_DIR = 'db/cards'
-FACTION_COLORS = {
-    'Thục': Color.red(),
-    'Quần': Color.dark_grey(),
-    'Ngụy': Color.blue(),
-    'Ngô': Color.green()
-}
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--deploy', action='store_true')
@@ -73,7 +68,8 @@ async def champ(ctx, *args):
             except FileNotFoundError:
                 image = None
             
-            embed = Embed(title='{} - {}'.format(champ['name'], champ['cn_name']), color=FACTION_COLORS[champ['faction']])
+            faction_color = get_faction_color(champ['faction'])
+            embed = Embed(title='{} - {}'.format(champ['name'], champ['cn_name']), color=faction_color)
             embed = embed.add_field(name='Phe phái', value=champ['faction'])
             embed = embed.add_field(name='HP', value=champ['hp'])
             embed = embed.add_field(name='Cặp đôi hoàn hảo', value='Không có')
