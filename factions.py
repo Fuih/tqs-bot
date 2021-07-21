@@ -23,7 +23,7 @@ FACTION_COLORS = {
 def get_faction_color(faction):
     faction = faction.split('/')
     if len(faction) == 1:
-        return FACTION_COLORS[FACTIONS[faction]]
+        return FACTION_COLORS[FACTIONS[faction[0]]]
 
     faction_value = FACTIONS[faction[0]] * FACTIONS[faction[1]]
     return FACTION_COLORS[faction_value]
