@@ -7,6 +7,7 @@ from discord.ext import commands
 from discord import File, Embed
 from db.champ import Champ
 from factions import get_faction_color
+from flask import Flask
 
 TOKEN = os.getenv('TOKEN')
 TOKEN_TEST = os.getenv('TOKEN_TEST')
@@ -106,3 +107,8 @@ async def all_champs(ctx):
     await ctx.send(response)
 
 bot.run(token)
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'ok'
