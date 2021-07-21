@@ -1,10 +1,10 @@
 from discord import Color
 
 FACTIONS = {
-    'Thục': 1,
-    'Quần': 3,
-    'Ngụy': 5,
-    'Ngô': 7
+    'Thục': 3,
+    'Quần': 5,
+    'Ngụy': 7,
+    'Ngô': 11
 }
 
 FACTION_COLORS = {
