@@ -106,9 +106,11 @@ async def all_champs(ctx):
     
     await ctx.send(response)
 
-bot.run(token)
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
     return 'ok'
+
+bot.run(token)
+app.run(debug=True)
