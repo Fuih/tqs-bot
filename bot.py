@@ -1,6 +1,7 @@
 # bot.py
 import os
 import argparse
+import sqlite3
 
 from discord.ext import commands
 from discord import File, Embed, Color
@@ -9,7 +10,7 @@ from db.champ import Champ
 TOKEN = os.getenv('TOKEN')
 TOKEN_TEST = os.getenv('TOKEN_TEST')
 
-ROOT = 'bot'
+DB_DIR = "db/tqs.db"
 CARDS_DIR = 'db/cards'
 FACTION_COLORS = {
     'Thục': Color.red(),
@@ -28,6 +29,7 @@ else:
     token = TOKEN_TEST
 
 bot = commands.Bot(command_prefix='!')
+conn = sqlite3.connect(DB_DIR)
 
 @bot.event
 async def on_ready():
@@ -61,13 +63,13 @@ async def champ(ctx, *args):
     if name == '':
         response['content'] = 'Xin hãy nhập thêm tên của tướng bạn cần tìm: !champ tên_tướng'
     else:
-        champ = Champ().get_champ_by_name(name.title())
+        champ = Champ(conn).get_champ_by_name(name.title())
 
         if champ == None:
             response['content'] = 'Xin lỗi, tôi không tìm thấy tướng có tên [{}] trong cơ sở dữ liệu'.format(name)
         else:
             try:
-                image = File('{}/{}/{}.jpg'.format(ROOT, CARDS_DIR, champ['cn_name']).lower())
+                image = File('{}/{}.jpg'.format(CARDS_DIR, champ['cn_name']).lower())
             except FileNotFoundError:
                 image = None
             
@@ -91,23 +93,6 @@ async def champ(ctx, *args):
                 else:
                     embed.add_field(name='Reworked', value='YES')
                     embed.add_field(name='Skills', value=champ['new_desc'], inline=False)
-            
-
-            # await ctx.send(file=image)
-            # response = 'Tên: {} - {}\n'.format(champ['name'], champ['cn_name'])
-            # response += 'Phe phái: {}\n'.format(champ['faction'])
-            # response += 'HP: {}\n'.format(champ['hp'])
-            
-            # if mode == 'ori':
-            #     response += 'Reworked: NO\n\n'
-            #     response += champ['original_desc']
-            # else:
-            #     if champ['reworked'] == 0:
-            #         response += 'Reworked: NO\n\n'
-            #         response += champ['original_desc']
-            #     else:
-            #         response += 'Reworked: YES\n\n'
-            #         response += champ['new_desc']
 
             response = {
                 'file': image,
@@ -119,7 +104,7 @@ async def champ(ctx, *args):
 
 @bot.command(name='all_champs', help='Số lượng tướng đã có trong database.')
 async def all_champs(ctx):
-    champs = Champ().get_all_champs()
+    champs = Champ(conn).get_all_champs()
     response = 'Hiện có tổng cộng {} tướng trong cơ sở dữ liệu'.format(len(champs))
     
     await ctx.send(response)
