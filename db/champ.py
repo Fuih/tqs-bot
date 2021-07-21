@@ -11,9 +11,7 @@ class Champ:
         query = "select * from champs where name not null"
         cursor.execute(query)
         result = cursor.fetchall()
-        result = [dict(zip(self.fields, r)) for r in result]
-
-        self.conn.close()        
+        result = [dict(zip(self.fields, r)) for r in result] 
 
         return result
 
@@ -25,9 +23,7 @@ class Champ:
         result = cursor.fetchone()
         
         if result != None:
-            result = dict(zip(self.fields, result))
-        
-        self.conn.close()        
+            result = dict(zip(self.fields, result))      
 
         return result
 
@@ -39,9 +35,7 @@ class Champ:
         result = cursor.fetchone()
         
         if result != None:
-            result = dict(zip(self.fields, result))
-
-        self.conn.close()        
+            result = dict(zip(self.fields, result))    
 
         return result
 
