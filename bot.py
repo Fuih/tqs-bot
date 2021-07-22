@@ -2,6 +2,7 @@
 import os
 import argparse
 import sqlite3
+import asyncio
 
 from discord.ext import commands
 from discord import File, Embed
@@ -112,5 +113,13 @@ app = Flask(__name__)
 def hello_world():
     return 'ok'
 
-bot.run(token)
-app.run(debug=True)
+async def start_bot():
+    bot.run(token)
+
+async def start_flask():
+    app.run(debug=True)
+
+async def main():
+    asyncio.gather(start_bot(), start_flask())
+
+asyncio.run(main())
